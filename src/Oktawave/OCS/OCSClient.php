@@ -17,7 +17,7 @@ class Oktawave_OCS_OCSClient
 {
 
     /**
-     * HTTP methods constants 
+     * HTTP methods constants
      */
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
@@ -26,18 +26,18 @@ class Oktawave_OCS_OCSClient
     const METHOD_HEAD = 'HEAD';
 
     /**
-     * Response formats constants 
+     * Response formats constants
      */
     const FORMAT_JSON = 'json';
     const FORMAT_TEXT = 'text';
 
     /**
-     * URL address constants 
+     * URL address constants
      */
     const DEFAULT_URL = 'https://ocs-pl.oktawave.com/auth/v1.0';
 
     /**
-     * Delimiter constants 
+     * Delimiter constants
      */
     const DEFAULT_DELIMITER = '/';
 
@@ -49,7 +49,7 @@ class Oktawave_OCS_OCSClient
 
     /**
      * The array of request content types based on the specified response format
-     * 
+     *
      * @var string[]
      */
     protected static $contentType = array(
@@ -59,7 +59,7 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Constructs OCSClient
-     * 
+     *
      * @param string $bucket Name of the bucket
      * @param string $url    OCS Endpoint address
      */
@@ -71,7 +71,7 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Returns OCS Endpoint url
-     * 
+     *
      * @return string
      */
     public function getUrl()
@@ -81,7 +81,7 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Returns URL to your storage (with AUTH_ string)
-     * 
+     *
      * @return string
      */
     public function getStorageUrl()
@@ -91,10 +91,10 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Authenticates OCS Client
-     * 
+     *
      * @param string $username
      * @param string $password
-     * 
+     *
      * @return
      */
     public function authenticate($username, $password)
@@ -125,7 +125,7 @@ class Oktawave_OCS_OCSClient
      *      ),
      *      ...
      * );
-     * 
+     *
      * @param string $path
      * @param string $delimiter
      * @param boolean $fullUrls
@@ -148,7 +148,7 @@ class Oktawave_OCS_OCSClient
         if ($delimiter) {
             $queryParams['delimiter'] = $delimiter;
         }
-		
+
 		if ($limit) {
 			if ($limit > 10000) {
 				$limit = 10000;
@@ -156,15 +156,15 @@ class Oktawave_OCS_OCSClient
 
 			$queryParams['limit'] = $limit;
 		}
-		
+
         if ($marker) {
             $queryParams['marker'] = $marker;
-        }		
+        }
 
         if (!empty($queryParams)) {
             $endpoint .= '?' . http_build_query($queryParams);
         }
-		
+
         $ret = $this->createCurl($this->bucket . $endpoint, self::METHOD_GET, null, null, true, false, self::FORMAT_JSON);
 
         return json_decode($ret['body'], true);
@@ -172,11 +172,11 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Uploads objects from given directory
-     * 
+     *
      * @param string  $dir       Path to directory
      * @param string  $dest      Prefix of destination on OCS
      * @param boolean $recursive Follow subdirectories?
-     * 
+     *
      * @return string[] URLs of created objects
      */
     public function createObjectsFromDir($dir, $dest, $recursive = true)
@@ -185,7 +185,7 @@ class Oktawave_OCS_OCSClient
 
         $urls = array();
         $files = array();
-        
+
         $dir = rtrim($dir, "/\\").'/';
 
         if ($recursive) {
@@ -217,9 +217,9 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Uploads objects from their paths
-     * 
+     *
      * @param string[] $paths Full paths to objects in a format path => destination
-     * 
+     *
      * @return string[] URLs of created objects
      */
     public function createObjectsFromPaths(array $paths)
@@ -236,11 +236,11 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Uploads object for given path
-     * 
+     *
      * @param string $path            Full path to file
      * @param string $dstPath         Destination path
      * @param boolean $checkIntegrity Check MD5 sum of file?
-     * 
+     *
      * @return string URL Full URL of created object
      */
     public function createObject($path, $dstPath, $checkIntegrity = true)
@@ -265,9 +265,9 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Creates empy directory (pseudo-directory) for given path
-     * 
+     *
      * @param string $dstPath Destination path
-     * 
+     *
      * @return string URL Full URL of created directory
      */
     public function createDirectory($dstPath)
@@ -290,9 +290,9 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Deletes object
-     * 
+     *
      * @param string $path  OCS path to object
-     * 
+     *
      * @return boolean
      */
     public function deleteObject($path)
@@ -306,9 +306,9 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Checks if object exists
-     * 
+     *
      * @param string $path Path to OCS's object
-     * 
+     *
      * @return boolean  Returns true if object exists on OCS
      * @throws Oktawave_OCS_Exception_OCSException
      */
@@ -332,9 +332,9 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Gets object's metadata.
-     * 
+     *
      * @param string $path Path to OCS's object
-     * 
+     *
      * @return array  With the same format as a listObject returns for single object
      * @throws Oktawave_OCS_Exception_OCSException
      */
@@ -354,10 +354,10 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Server-Side rename object
-     * 
+     *
      * @param string $path
      * @param string $newName
-     * 
+     *
      * @return string URL Full URL of renamed object
      */
     public function renameObject($path, $newName)
@@ -372,10 +372,10 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Server-Side copy object
-     * 
+     *
      * @param string $path
      * @param string $destinationPath
-     * 
+     *
      * @return string URL Full URL of copied object
      */
     public function copyObject($path, $destinationPath)
@@ -394,10 +394,10 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Saves object as file
-     * 
+     *
      * @param string $path
      * @param string $destinationPath
-     * 
+     *
      * @return string path
      */
     public function downloadObjectToFile($path, $destinationPath)
@@ -418,9 +418,9 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Downloads object content
-     * 
+     *
      * @param string $path
-     * 
+     *
      * @return string Object's content
      */
     public function downloadObject($path)
@@ -441,7 +441,7 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Checks if OCS Client is authenticated
-     * 
+     *
      * @throws Oktawave_OCS_Exception_NotAuthenticatedException
      */
     protected function isAuthenticated()
@@ -453,7 +453,7 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Get Curl response
-     * 
+     *
      * @param string $endpoint
      * @param string $method
      * @param array $file
@@ -461,11 +461,12 @@ class Oktawave_OCS_OCSClient
      * @param boolean $includeHeader
      * @param boolean $noBody
      * @param string $format
-     * 
+     * @param boolean $verbose
+     *
      * @return array
      * @throws Oktawave_OCS_Exception_HttpException
      */
-    protected function createCurl($endpoint, $method = self::METHOD_GET, array $file = null, array $customHeaders = null, $includeHeader = true, $noBody = false, $format = null)
+    protected function createCurl($endpoint, $method = self::METHOD_GET, array $file = null, array $customHeaders = null, $includeHeader = true, $noBody = false, $format = null, $verbose = false)
     {
         $curl = curl_init();
 
@@ -486,14 +487,14 @@ class Oktawave_OCS_OCSClient
         } else {
             $url = $this->storageUrl . '/' . $endpoint;
         }
-		
+
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_CAINFO => dirname(__FILE__) . '/ca-bundle.crt',
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_VERBOSE => true,
+            CURLOPT_VERBOSE => $verbose,
             CURLOPT_USERAGENT => $this->useragent,
             CURLOPT_FAILONERROR => true,
         ));
@@ -546,7 +547,7 @@ class Oktawave_OCS_OCSClient
         curl_setopt($curl, CURLOPT_HTTPHEADER, $this->makeHeaders($headers));
 
         $response = curl_exec($curl);
-		
+
         $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
@@ -554,7 +555,7 @@ class Oktawave_OCS_OCSClient
         $errorMessage = curl_error($curl);
 
         curl_close($curl);
-		
+
         if (isset($fhRes)) {
             fclose($fhRes);
         }
@@ -573,9 +574,9 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Get headers as array
-     * 
+     *
      * @param string $response
-     * 
+     *
      * @return array
      */
     protected function getHeaders($response)
@@ -602,7 +603,7 @@ class Oktawave_OCS_OCSClient
      *     'X-Auth-User' => 'value',
      *     'X-Auth-Key'  => 'value2',
      * );
-     * 
+     *
      * @param array $headersAsAssoc
      * @return array
      */
@@ -619,10 +620,10 @@ class Oktawave_OCS_OCSClient
 
     /**
      * Sets content type for CURL request
-     * 
+     *
      * @param string $format
      * @param array $headers
-     * 
+     *
      * @throws Oktawave_OCS_Exception_FormatNotSupportedException
      * @return array
      */
